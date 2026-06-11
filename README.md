@@ -47,6 +47,12 @@ After setup, edit `~/.claude/wallpaper/config.json` to tweak appearance:
 
 When `update_mode` is set to `"auto"`, setup registers a platform-specific daemon — launchd on macOS, systemd on Linux, or Task Scheduler on Windows — that runs `runner.py --watch` in the background. The runner watches `~/.claude/plugins/installed_plugins.json` for changes and regenerates the wallpaper automatically whenever plugins are added or removed.
 
+## Bug reports
+
+Open an issue at https://github.com/jianha9/wallpaper-cheatsheet/issues
+
+Please include your **platform** (macOS / Linux / Windows) and **Python version** (`python3 --version`) in the report.
+
 ## Contributing
 
 PRs welcome. See `generate.py` for the rendering pipeline and `runner.py` for the file watcher.
