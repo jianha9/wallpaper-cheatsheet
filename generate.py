@@ -188,20 +188,33 @@ def _parse_plugins() -> list[dict]:
             continue
         install_path = Path(installs[0]["installPath"])
         plugin_name  = plugin_key.split("@")[0]
-        skills_dir   = install_path / "skills"
-        if not skills_dir.exists():
-            continue
-        for skill_dir in sorted(skills_dir.iterdir()):
-            if not skill_dir.is_dir():
-                continue
-            skill_md = skill_dir / "SKILL.md"
-            if not skill_md.exists():
-                continue
-            results.append({
-                "group":       plugin_name,
-                "skill":       f"/{skill_dir.name}",
-                "description": _extract_description(skill_md),
-            })
+
+        # skills/ layout: subdirectory per skill containing SKILL.md
+        skills_dir = install_path / "skills"
+        if skills_dir.exists():
+            for skill_dir in sorted(skills_dir.iterdir()):
+                if not skill_dir.is_dir():
+                    continue
+                skill_md = skill_dir / "SKILL.md"
+                if not skill_md.exists():
+                    continue
+                results.append({
+                    "group":       plugin_name,
+                    "skill":       f"/{skill_dir.name}",
+                    "description": _extract_description(skill_md),
+                })
+
+        # commands/ layout: one .md file per command
+        commands_dir = install_path / "commands"
+        if commands_dir.exists():
+            for cmd_file in sorted(commands_dir.iterdir()):
+                if cmd_file.suffix != ".md":
+                    continue
+                results.append({
+                    "group":       plugin_name,
+                    "skill":       f"/{cmd_file.stem}",
+                    "description": _extract_description(cmd_file),
+                })
 
     return sorted(results, key=lambda x: (x["group"], x["skill"]))
 
@@ -663,6 +676,20 @@ def set_wallpaper(path: Path) -> None:
     import platform
     system = platform.system()
     if system == "Darwin":
+        # macOS caches wallpaper by path; switching to a temp path first busts the cache.
+        tmp = path.parent / ("_tmp_" + path.name)
+        try:
+            import shutil
+            shutil.copy2(str(path), str(tmp))
+            escaped_tmp = str(tmp).replace('\\', '\\\\').replace('"', '\\"')
+            subprocess.run(
+                ["osascript", "-e",
+                 f'tell application "System Events" to set picture of every desktop to POSIX file "{escaped_tmp}"'],
+                check=True,
+            )
+        finally:
+            if tmp.exists():
+                tmp.unlink()
         escaped = str(path).replace('\\', '\\\\').replace('"', '\\"')
         script = (
             f'tell application "System Events" to set picture of every desktop '
