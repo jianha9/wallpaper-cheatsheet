@@ -1,0 +1,15 @@
+{
+  "name": "wallpaper-cheatsheet",
+  "description": "Live slash-command cheatsheet as your desktop wallpaper. Auto-updates when plugins change.",
+  "author": {
+    "name": "Hantao Jiang"
+  },
+  "version": "1.0.0",
+  "commands": [
+    "./commands/wallpaper-setup.md",
+    "./commands/wallpaper-update.md",
+    "./commands/wallpaper-remove.md"
+  ],
+  "keywords": ["wallpaper", "cheatsheet", "productivity"],
+  "category": "productivity"
+}

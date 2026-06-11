@@ -1,0 +1,7 @@
+{
+  "name": "wallpaper-cheatsheet",
+  "version": "1.0.0",
+  "description": "Live slash-command cheatsheet as your desktop wallpaper. Auto-updates when plugins change.",
+  "keywords": ["claude-code", "wallpaper", "cheatsheet", "productivity"],
+  "license": "MIT"
+}
